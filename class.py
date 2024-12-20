@@ -25,10 +25,10 @@ class Employee(Object):
         self.mail = mail
 
     def add(self):
-        pass
+        Files.add_info('employee', 'a+', self.name, self.position, self.phone, self.mail)
 
     def delete(self):
-        pass
+        Files.delete_info('employee', 'w', self.name, self.position, self.phone, self.mail)
 
     def show(self):
         return f"Name: {self.name}\nPosition: {self.position}\nPhone Number: {self.phone}\nEmail address: {self.mail}"
@@ -44,10 +44,10 @@ class Book(Object):
         self.sell_price = sell_price
 
     def add(self):
-        pass
+        Files.add_info('book', 'a+', self.name, self.year, self.author, self.genre, self.buy_price, self.sell_price)
 
     def delete(self):
-        pass
+        Files.delete_info('book', 'w', self.name, self.year, self.author, self.genre, self.buy_price, self.sell_price)
 
     def show(self):
         return f"Name: {self.name}\nAuthor: {self.author}\nGenre: {self.genre}\n" \
@@ -62,10 +62,10 @@ class Sell(Object):
         self.profit = self.book.sell_price - self.book.buy_price
 
     def add(self):
-        pass
+        Files.add_info('sell', 'a+', self.employee, self.book, self.date, self.profit)
 
     def delete(self):
-        pass
+        Files.delete_info('sell', 'w', self.employee, self.book, self.date, self.profit)
 
     def show(self):
         return f"Employee: {self.employee}\nBook: {self.book.name}\nDate: {self.date}\nProfit: {self.profit}"
