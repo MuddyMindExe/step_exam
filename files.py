@@ -9,8 +9,19 @@ class Files:
         return wrap
 
     @staticmethod
+    @open
+    def duplicate(file, args):
+        line = Files.form_string(args)
+        return True if line in file.readlines() else False
+
+    @staticmethod
     def form_string(args):
         return ', '.join(str(val) for val in args) + '\n'
+
+    @staticmethod
+    @open
+    def return_strings(file):
+        return file.readlines()
 
     @staticmethod
     @open

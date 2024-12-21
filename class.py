@@ -23,12 +23,24 @@ class Employee(Object):
         self.position = position
         self.phone = phone
         self.mail = mail
+        self.args = [self.name, self.position, self.phone, self.mail]
+
+    # def add(self):
+    #     if not Files.duplicate(self.args):
+    #         Files.add_info('employee', 'a+', *self.args)
+    #         return True
+    #     else:
+    #         return False
+    # принт перенести в класс интерфейса
 
     def add(self):
-        Files.add_info('employee', 'a+', self.name, self.position, self.phone, self.mail)
+        if not Files.duplicate(self.args):
+            Files.add_info('employee', 'a+', *self.args)
+        else:
+            print("This employee is already in database")
 
     def delete(self):
-        Files.delete_info('employee', 'w', self.name, self.position, self.phone, self.mail)
+        Files.delete_info('employee', 'w', *self.args)
 
     def show(self):
         return f"Name: {self.name}\nPosition: {self.position}\nPhone Number: {self.phone}\nEmail address: {self.mail}"
@@ -42,12 +54,16 @@ class Book(Object):
         self.genre = genre
         self.buy_price = buy_price
         self.sell_price = sell_price
+        self.args = [self.name, self.year, self.author, self.genre, self.buy_price, self.sell_price]
 
     def add(self):
-        Files.add_info('book', 'a+', self.name, self.year, self.author, self.genre, self.buy_price, self.sell_price)
+        if not Files.duplicate(self.args):
+            Files.add_info('book', 'a+', *self.args)
+        else:
+            print("This employee is already in database")
 
     def delete(self):
-        Files.delete_info('book', 'w', self.name, self.year, self.author, self.genre, self.buy_price, self.sell_price)
+        Files.delete_info('book', 'w', *self.args)
 
     def show(self):
         return f"Name: {self.name}\nAuthor: {self.author}\nGenre: {self.genre}\n" \
