@@ -1,6 +1,6 @@
 from abc import ABC
 from abc import abstractmethod
-from files import Files
+from sql import Files
 
 
 class Object(ABC):

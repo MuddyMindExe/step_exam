@@ -38,6 +38,8 @@ class Files:
         for line in lines:
             file.write(line)
 
+    # Функцию ниже переделать.
+    # Должна возвращать массив всего находящегося в файле. Отдельная функция массив обрабатывает
     @staticmethod
     @open
     def show_info(file):
@@ -45,3 +47,13 @@ class Files:
         for line in lines:
             for el in line.split(', '):
                 print(el + '\n')
+        return [line for line in lines]
+
+    # @staticmethod
+    # @open
+    # def show_info(file):
+    #     lines = file.readlines()
+    #     for line in lines:
+    #         for el in line.split(', '):
+    #             print(el + '\n')
+    #     return [line for line in lines]
