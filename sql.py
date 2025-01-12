@@ -4,17 +4,19 @@ import sqlite3
 class Files:
     @staticmethod
     def open_con(func):
-        def wrap():
+        def wrap(table, *args):
             con = sqlite3.connect('bookstore.db')
             cursor = con.cursor()
-            func(cursor)
+            Files.init(cursor)
+            func(table, cursor, *args)
             con.commit()
             con.close()
 
         return wrap
 
+    @staticmethod
     @open_con
-    def __init__(self, cursor):
+    def init(cursor):
         cursor.execute('''CREATE TABLE IF NOT EXISTS employees (
             name TEXT NOT NULL,
             position TEXT NOT NULL,
@@ -33,47 +35,60 @@ class Files:
         )
         ''')
         cursor.execute('''CREATE TABLE IF NOT EXISTS sells (
-            employee_phone INTEGER NOT NULL,
+            employee_id INTEGER NOT NULL,
             book_id INTEGER NOT NULL,
-            date DATETIME NOT NULL,
+            date TEXT NOT NULL,
             profit INTEGER NOT NULL
         )
         ''')
 
     @staticmethod
-    def duplicate(file, args):
-        line = Files.form_string(args)
-
-    def form_query(self):
-        pass
-
-    @staticmethod
-    def form_string(args):
-        return ', '.join(str(val) for val in args) + '\n'
-
-    @staticmethod
-    def return_strings(file):
-        return file.readlines()
+    def form_add_query(table: str):
+        columns = {"employees": "(name, position, phone, mail)",
+                   "books": "(name, year, author, genre, buy_price, sell_price)",
+                   "sells": "(employee_phone, book_id, date, profit)"}
+        placeholders = ', '.join(['?'] * (columns[table].count(',') + 1))
+        query = f""" 
+                    INSERT INTO {table} {columns[table]} Values ({placeholders})
+                 """
+        return query.strip()
 
     @staticmethod
-    def add_info(file, *args):
-        string = Files.form_string(args)
-        file.write(string)
+    def form_delete_query(table: str, columns: dict):
+        where = " AND ".join([f'{column} = ?' for column in columns.keys()])
+        query = f""" 
+                    DELETE FROM {table} WHERE {where}
+                 """
+        return query.strip()
 
     @staticmethod
-    def delete_info(file, *args):
-        line_to_remove = Files.form_string(args)
-        lines = file.readlines()
-        lines.remove(line_to_remove)
-        for line in lines:
-            file.write(line)
+    def duplicate(table, *args):
+        all_data = Files.return_all(table)
+        wanted_column = tuple([_ for _ in args])
+        return wanted_column in all_data
 
-    # Функцию ниже переделать.
-    # Должна возвращать массив всего находящегося в файле. Отдельная функция массив обрабатывает
     @staticmethod
-    def show_info(file):
-        lines = file.readlines()
-        for line in lines:
-            for el in line.split(', '):
-                print(el + '\n')
-        return [line for line in lines]
+    @open_con
+    def add_info(table: str, args, cursor):
+        try:
+            query = Files.form_add_query(table)
+            cursor.execute(query, tuple(args))
+            return True
+        except sqlite3.Error:
+            return False
+
+    @staticmethod
+    @open_con
+    def delete_info(table: str, cursor, **kwargs):
+        try:
+            query = Files.form_delete_query(table, kwargs)
+            cursor.execute(query)
+            return True
+        except sqlite3.Error:
+            return False
+
+    @staticmethod
+    @open_con
+    def return_all(table, cursor):
+        cursor.execute(f"SELECT * FROM {table}")
+        return cursor.fetchall()

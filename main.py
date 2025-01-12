@@ -1,0 +1,2 @@
+def interface():
+    pass
