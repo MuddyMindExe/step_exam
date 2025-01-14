@@ -18,7 +18,3 @@ def dt():
     print(dt1)
     dt1 += datetime.datetime(0, 0, 0, 2, 0, 0)
     print(dt1)
-
-
-st = 'em'
-print(st[:100])
