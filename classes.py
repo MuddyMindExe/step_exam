@@ -107,7 +107,7 @@ class Sell(Object):
 
     @staticmethod
     def fill_sell_information():
-        
+        pass
 
     def add(self):
         return Files.add_info('sells', *[self.employee.phone, self.book_id, self.date, self.profit])
