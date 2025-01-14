@@ -41,37 +41,14 @@ class UserInteraction:
         print(f"Выберите, какие данные хотите добавить.\n")
         choice = input(f"1 - Добавить работника\n2 - Добавить книгу\n3 - Добавить продажу\n4 - Назад")
         if choice == '1':
-            UserInteraction.employee_information()
+            data = classes.Employee.fill_employee_information()
+            classes.Employee(*data).add()
         elif choice == '2':
-            pass
+            data = classes.Book.fill_book_information()
+            classes.Book(*data).add()
         elif choice == '3':
             pass
         elif choice == '4':
             UserInteraction.start()
         else:
             print('Некорректный выбор, повторите ввод.')
-
-    @staticmethod
-    def employee_information():
-        name = input('Введите имя и фамилию работника: ')
-        position = input('Укажите должность работника: ')
-        try:
-            phone = int(input('Введите номер телефона работника без кода страны: '))
-        except ValueError:
-            phone = int(input('Введите корректный номер телефона работника без кода страны: '))
-        mail = input('Укажите почту работника: ')
-        classes.Employee(name, position, phone, mail).add()
-
-    @staticmethod
-    def book_information():
-        name = input('Введите название книги: ')
-        author = input('Введите имя автора книги: ')
-        genre = input('Введите жанр книги: ')
-        try:
-            buy_price = int(input('Введите цену закупки книги: '))
-            sell_price = int(input('Введите цену продажи книги: '))
-        except ValueError:
-            print('Укажите корректные данные')
-            buy_price = int(input('Введите цену закупки книги: '))
-            sell_price = int(input('Введите цену продажи книги: '))
-        classes.

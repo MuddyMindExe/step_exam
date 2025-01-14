@@ -28,6 +28,17 @@ class Employee(Object):
         self.phone = phone
         self.mail = mail
 
+    @staticmethod
+    def fill_employee_information():
+        name = input('Введите имя и фамилию работника: ')
+        position = input('Укажите должность работника: ')
+        try:
+            phone = int(input('Введите номер телефона работника без кода страны: '))
+        except ValueError:
+            phone = int(input('Введите корректный номер телефона работника без кода страны: '))
+        mail = input('Укажите почту работника: ')
+        return [name, position, phone, mail]
+
     def add(self):
         return Files.add_info('employees', *[self.name, self.position, self.phone, self.mail])
 
@@ -51,6 +62,21 @@ class Book(Object):
         self.genre = genre
         self.buy_price = buy_price
         self.sell_price = sell_price
+
+    @staticmethod
+    def fill_book_information():
+        name = input('Введите название книги: ')
+        year = int(input('Укажите год выпуска книги'))
+        author = input('Введите имя автора книги: ')
+        genre = input('Введите жанр книги: ')
+        try:
+            buy_price = int(input('Введите цену закупки книги: '))
+            sell_price = int(input('Введите цену продажи книги: '))
+        except ValueError:
+            print('Укажите корректные данные')
+            buy_price = int(input('Введите цену закупки книги: '))
+            sell_price = int(input('Введите цену продажи книги: '))
+        return [name, year, author, genre, buy_price, sell_price]
 
     def add(self):
         return Files.add_info('books', *[self.name, self.year, self.author, self.genre, self.buy_price, self.sell_price])
@@ -78,6 +104,10 @@ class Sell(Object):
         self.book_id = str(book.year)+book.name[:3]+book.author[:3]
         self.date = date
         self.profit = self.book.sell_price - self.book.buy_price
+
+    @staticmethod
+    def fill_sell_information():
+        
 
     def add(self):
         return Files.add_info('sells', *[self.employee.phone, self.book_id, self.date, self.profit])

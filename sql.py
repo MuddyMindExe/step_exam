@@ -56,9 +56,7 @@ class Files:
     @staticmethod
     def form_delete_query(table: str, columns: dict):
         where = " AND ".join([f'{column} = ?' for column in columns.keys()])
-        query = f""" 
-                    DELETE FROM {table} WHERE {where}
-                 """
+        query = f"""DELETE FROM {table} WHERE {where}"""
         return query.strip()
 
     @staticmethod
