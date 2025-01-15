@@ -1,6 +1,6 @@
 from abc import ABC
 from abc import abstractmethod
-from sql import Files
+from sql import SQL
 
 
 class Object(ABC):
@@ -40,16 +40,16 @@ class Employee(Object):
         return [name, position, phone, mail]
 
     def add(self):
-        return Files.add_info('employees', *[self.name, self.position, self.phone, self.mail])
+        return SQL.add_info('employees', *[self.name, self.position, self.phone, self.mail])
 
     def delete(self):
-        return Files.delete_info('employees', name=self.name, position=self.position, phone=self.phone, mail=self.mail)
+        return SQL.delete_info('employees', name=self.name, position=self.position, phone=self.phone, mail=self.mail)
 
     def show_current(self):
         return f"Name: {self.name}\nPosition: {self.position}\nPhone Number: {self.phone}\nEmail address: {self.mail}"
 
     def show_all(self):
-        records = Files.return_all('employees')
+        records = SQL.return_all('employees')
         for record in records:
             print(f"Name: {record[0]}, Position: {record[1]}, Phone: {record[2]}, Mail: {record[3]}\n")
 
@@ -79,10 +79,10 @@ class Book(Object):
         return [name, year, author, genre, buy_price, sell_price]
 
     def add(self):
-        return Files.add_info('books', *[self.name, self.year, self.author, self.genre, self.buy_price, self.sell_price])
+        return SQL.add_info('books', *[self.name, self.year, self.author, self.genre, self.buy_price, self.sell_price])
 
     def delete(self):
-        return Files.delete_info('books', name=self.name, year=self.year,
+        return SQL.delete_info('books', name=self.name, year=self.year,
                                  author=self.author, genre=self.genre,
                                  buy_pice=self.buy_price, sell_price=self.sell_price)
 
@@ -91,7 +91,7 @@ class Book(Object):
                f"Original price: {self.buy_price}\nSelling price: {self.sell_price}"
 
     def show_all(self):
-        records = Files.return_all('books')
+        records = SQL.return_all('books')
         for record in records:
             print(f"ID: {record[0]}Name: {record[1]}, Year: {record[2]}, Author: {record[3]}, Genre: {record[4]}"
                   f"Buy price: {record[5]}, Sell price: {record[6]}\n")
@@ -110,16 +110,16 @@ class Sell(Object):
         pass
 
     def add(self):
-        return Files.add_info('sells', *[self.employee.phone, self.book_id, self.date, self.profit])
+        return SQL.add_info('sells', *[self.employee.phone, self.book_id, self.date, self.profit])
 
     def delete(self):
-        return Files.delete_info('employee_id', employee_id=self.employee.phone, book_id=self.book_id,
+        return SQL.delete_info('employee_id', employee_id=self.employee.phone, book_id=self.book_id,
                                  date=self.date, profit=self.profit)
 
     def show_current(self):
         return f"Employee: {self.employee}\nBook: {self.book.name}\nDate: {self.date}\nProfit: {self.profit}"
 
     def show_all(self):
-        records = Files.return_all('sells')
+        records = SQL.return_all('sells')
         for record in records:
             print(f"Employee: {record[0]}, Book: {record[1]}, Date: {record[2]}, Profit: {record[3]}\n")
