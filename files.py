@@ -1,3 +1,4 @@
+# Этот игнорировать. Файл не используется.
 class Files:
     @staticmethod
     def open(func):
