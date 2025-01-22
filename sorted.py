@@ -2,31 +2,31 @@ from _datetime import datetime
 from execute import Show
 
 
-class Modify:
-    @staticmethod
+class Modify:  # <- Класс для обработки ошибок и неправильных вводов, ошибок и т.д
+    @staticmethod  # <- Декоратор для обработки исключений и вызова функции до момента правильного ввода
     def try_except(func):
         def wrap(*args):
-            try:
-                return func(*args)
-            except [IndexError, ValueError]:
-                print('Некорректный ввод данных, повторите попытку')
-                func(*args)
+            while True:
+                try:
+                    return func(*args)
+                except(IndexError, ValueError):
+                    print('Некорректный ввод данных, повторите попытку')
         return wrap
 
     @staticmethod
-    @try_except
-    def create_date():
-        str_date = input('Введите дату в формате: yyyy.mm.dd: ')
-        datetime.strptime(str_date, '%Y.%M.%D')
-        return str_date
+    @try_except  # <- Функция, которая запрашивает у пользователя ввод даты согласно шаблону. Возвращает
+    def create_date(query='Введите дату в формате: yyyy.mm.dd: '):
+        str_date = input(query)
+        date = datetime.strptime(str_date, '%Y.%m.%d')
+        return date
 
     @staticmethod
-    @try_except
+    @try_except  # <- Функция запрашивает ввод ID и возвращает его, если юзер ввел int
     def create_int(query: str):
         id = int(input(query))
         return id
 
-    @staticmethod
+    @staticmethod  # <- Функция форматирует данные, переданные sql в читаемые принты
     def print_sorted_list(unsorted_list):
         if unsorted_list:
             for arr in unsorted_list:
@@ -35,21 +35,22 @@ class Modify:
             print('Не найдено данных по таким параметрам')
 
 
-class SortedData:
+class SortedData:  # <- Класс для сортировки таблиц по различным данным
     def __init__(self, sells: list):
         self.sells = sells
 
-    def date_check(self):
+    def date_check(self):  # <- Пользователь вводил 2 даты и возвращается отфильтрованный
         valid_sales = []
-        date_1 = datetime.strptime(Modify.create_date(), '%Y.%M.%D')
-        date_2 = datetime.strptime(Modify.create_date(), '%Y.%M.%D')
+        date_1 = Modify.create_date('Введите первую дату (формат yyyy.mm.dd): ')
+        date_2 = Modify.create_date('Введите вторую дату (формат yyyy.mm.dd): ')
+        date_1, date_2 = max(date_1, date_2), min(date_1, date_2)
         for sell in self.sells:
-            date = datetime.strptime(sell[2], '%Y.%M.%D')
+            date = datetime.strptime(sell[2], '%Y.%m.%d')
             if date_1 <= date <= date_2:
                 valid_sales.append(sell)
         return valid_sales
 
-    def best(self, table_name, *params):
+    def best(self, table_name, *params):  # <- Поиск самого частого элемента путем создания словаря
         indexes = {'employees': 0, 'books': 1}
         index = indexes[table_name]
         all_sells = {}
@@ -71,7 +72,7 @@ class SortedData:
         return sum(sell[3] for sell in self.sells)
 
 
-class ExecuteCommand:
+class ExecuteCommand:  # <- Класс-интерфейс, нужден просто для комфортного вызова функций, потом может быть дополнен
     def __init__(self, table_name, *data, **params):
         self.table_name = table_name
         self.data = data

@@ -1,7 +1,7 @@
 import sqlite3
 
 
-class SQL:
+class SQL:  # <- Класс-интерфейс, просто вызывает функции и возвращает результат их выполнения
     def __init__(self, table_name):
         self.table_name = table_name
         ExecuteQuery("employees").create_table(id=['INTEGER', 'PRIMARY KEY', 'AUTOINCREMENT'],
@@ -17,13 +17,13 @@ class SQL:
                                            book_id=['INTEGER', 'NOT NULL'],
                                            date=['TEXT', 'NOT NULL'], profit=['INTEGER', 'NOT NULL'])
 
-    def add_info(self, **kwargs):
+    def add_info(self, **kwargs):  # <- Функция добавления данных
         return ExecuteQuery(self.table_name).add(**kwargs)
 
-    def delete_info(self, **kwargs):
+    def delete_info(self, **kwargs):  # <- Функция удаления данных
         return ExecuteQuery(self.table_name).delete(**kwargs)
 
-    def return_info(self, *args, **kwargs):
+    def return_info(self, *args, **kwargs):  # <- Функция читки данных из таблиц
         return ExecuteQuery(self.table_name).return_info(*args, **kwargs)
 
 

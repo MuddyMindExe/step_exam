@@ -3,7 +3,7 @@ from abc import abstractmethod
 from classes import Employee, Book, Sell, SQL
 
 
-class Execute(ABC):
+class Execute(ABC):  # <- Абстрактный класс для Add и Delete
     @abstractmethod
     def employee(self):
         pass
@@ -17,7 +17,7 @@ class Execute(ABC):
         pass
 
 
-class Add(Execute):
+class Add(Execute):  # <- Создает объекты класса и обращается к нужным методам
     def employee(self):
         employee = EmployeeBuilder.build()
         employee.add()
@@ -31,7 +31,7 @@ class Add(Execute):
         sell.add()
 
 
-class Delete(Execute):
+class Delete(Execute):  # <- Создает объекты класса и обращается к нужным методам
     def employee(self):
         employee = EmployeeBuilder.build()
         employee.delete()
@@ -45,7 +45,7 @@ class Delete(Execute):
         sell.delete()
 
 
-class Show:
+class Show:  # <- Функция возвращает сырой список из кортежей, полученных из таблицы SQL
     def __init__(self, table_name, *args, **kwargs):
         self.table_name = table_name
         self.args = args
@@ -55,7 +55,7 @@ class Show:
         return SQL(f"{self.table_name}").return_info(*self.args, **self.kwargs)
 
 
-class EmployeeBuilder:
+class EmployeeBuilder:  # <- Класс строитель объекта класса по введенным данным
     @staticmethod
     def build():
         name = input('Введите имя и фамилию работника: ')
@@ -68,7 +68,7 @@ class EmployeeBuilder:
         return Employee(name, position, phone, mail)
 
 
-class BookBuilder:
+class BookBuilder:  # <- Класс строитель объекта класса по введенным данным
     @staticmethod
     def build():
         name = input('Введите название книги: ')
@@ -85,7 +85,7 @@ class BookBuilder:
         return Book(name, year, author, genre, buy_price, sell_price)
 
 
-class SellBuilder:
+class SellBuilder:  # <- Класс строитель объекта класса по введенным данным
     @staticmethod
     def build():
         employee = EmployeeBuilder.build()

@@ -1,8 +1,10 @@
 from sorted import ExecuteCommand, Modify
 from execute import Add, Delete, EmployeeBuilder
 
+# https://github.com/MuddyMindExe/step_exam
 
-class Handler:
+
+class Handler:  # <- Конструктор Пользовательского интерфейса. Позволяет добавлять сколько угодно кнопок
     handlers = {
         'main_menu': {},
         'add_menu': {},
@@ -13,25 +15,25 @@ class Handler:
         'sells_info_menu': {}
     }
 
-    @staticmethod
+    @staticmethod  # <- Регистрация групп кнопок и самих кнопок
     def register_handler(index, description, menu, callback):
         if menu not in Handler.handlers:
             Handler.handlers[menu] = {}
         Handler.handlers[menu][index] = {'desc': description, 'callback': callback}
 
 
-class UserInteraction:
+class UserInteraction:  # <- main функция
     warn = 1
 
     @staticmethod
-    def warning():
+    def warning():  # <- Инструкция по взаимодействию
         warning = input(f"Для взаимодействия с интерфейсом нужно вводить соответствующие данные.\n"
                         f"При вводе цифр не нужно использовать дополнительные пробелы, точки и прочие символы\n"
                         f"1 - Ок\n2 - Больше не напоминать в текущей сессии\n")
         return warning
 
     @staticmethod
-    def remember_warning_choice():
+    def remember_warning_choice():  # <- В зависимости от значения warn будет либо напоминать, либо нет
         warning = UserInteraction.warning()
         if warning in ['1', '2']:
             UserInteraction.warn = int(warning)
@@ -40,7 +42,7 @@ class UserInteraction:
             UserInteraction.warning()
 
     @staticmethod
-    def start_menu(menu_name):
+    def start_menu(menu_name):  # <- Стартовая менюшка
         if UserInteraction.warn == 1:
             UserInteraction.remember_warning_choice()
 
@@ -65,6 +67,8 @@ class UserInteraction:
     def exit():
         print("Выход из программы.")
         exit(0)
+
+# Ниже регистрация всех кнопок
 
 
 Handler.register_handler('1', 'Добавить данные', 'main_menu',
@@ -123,7 +127,7 @@ Handler.register_handler('3', 'Назад', 'book_info_menu',
 Handler.register_handler('1', 'Данные о всех продажах', 'sells_info_menu',
                          lambda: ExecuteCommand('sells').show_obj())
 Handler.register_handler('2', 'Данные о всех продажах за конкретную дату', 'sells_info_menu',
-                         lambda: ExecuteCommand('sells', date=Modify.create_date()).show_obj())
+                         lambda: ExecuteCommand('sells', date=str(Modify.create_date())).show_obj())
 Handler.register_handler('3', 'Все продажи за определенный промежуток времени', 'sells_info_menu',
                          lambda: ExecuteCommand('sells').obj_in_period())
 Handler.register_handler('4', 'Все продажи конкретного сотрудника', 'sells_info_menu',
