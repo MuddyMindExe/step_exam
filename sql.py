@@ -3,7 +3,22 @@ import sqlite3
 
 class SQL:  # <- Класс-интерфейс, просто вызывает функции и возвращает результат их выполнения
     def __init__(self, table_name):
-        self.table_name = table_name
+        self.executor = ExecuteQuery(table_name)
+        SQLDatabaseInitiate.tables_init()
+
+    def add_info(self, **kwargs):  # <- Функция добавления данных
+        return self.executor.add(**kwargs)
+
+    def delete_info(self, **kwargs):  # <- Функция удаления данных
+        return self.executor.delete(**kwargs)
+
+    def return_info(self, *args, **kwargs):  # <- Функция читки данных из таблиц
+        return self.executor.return_info(*args, **kwargs)
+
+
+class SQLDatabaseInitiate:
+    @staticmethod
+    def tables_init():
         ExecuteQuery("employees").create_table(id=['INTEGER', 'PRIMARY KEY', 'AUTOINCREMENT'],
                                                name=['TEXT', 'NOT NULL'], position=['TEXT', 'NOT NULL'],
                                                phone=['INTEGER', 'NOT NULL'], mail=['TEXT', 'NOT NULL'])
@@ -16,15 +31,6 @@ class SQL:  # <- Класс-интерфейс, просто вызывает ф
         ExecuteQuery("sells").create_table(employee_id=['INTEGER', 'NOT NULL'],
                                            book_id=['INTEGER', 'NOT NULL'],
                                            date=['TEXT', 'NOT NULL'], profit=['INTEGER', 'NOT NULL'])
-
-    def add_info(self, **kwargs):  # <- Функция добавления данных
-        return ExecuteQuery(self.table_name).add(**kwargs)
-
-    def delete_info(self, **kwargs):  # <- Функция удаления данных
-        return ExecuteQuery(self.table_name).delete(**kwargs)
-
-    def return_info(self, *args, **kwargs):  # <- Функция читки данных из таблиц
-        return ExecuteQuery(self.table_name).return_info(*args, **kwargs)
 
 
 class ExecuteQuery:

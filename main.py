@@ -1,5 +1,6 @@
 from sorted import ExecuteCommand, Modify
-from execute import Add, Delete, EmployeeBuilder
+from execute import Add, Delete, EmployeeBuilder, BookBuilder, SellBuilder
+from db import SQLite
 
 # https://github.com/MuddyMindExe/step_exam
 
@@ -71,6 +72,10 @@ class UserInteraction:  # <- main функция
 # Ниже регистрация всех кнопок
 
 
+employees_db = SQLite('employees')
+books_db = SQLite('books')
+sells_db = SQLite('sells')
+
 Handler.register_handler('1', 'Добавить данные', 'main_menu',
                          lambda: UserInteraction.start_menu('add_menu'))
 Handler.register_handler('2', 'Удалить данные', 'main_menu',
@@ -81,20 +86,20 @@ Handler.register_handler('4', 'Выход', 'main_menu',
                          lambda: UserInteraction.exit())
 
 Handler.register_handler('1', 'Добавить работника', 'add_menu',
-                         lambda: Add().employee())
+                         lambda: Add().execute(EmployeeBuilder.build(employees_db)))
 Handler.register_handler('2', 'Добавить книгу', 'add_menu',
-                         lambda: Add().book())
+                         lambda: Add().execute(BookBuilder.build(books_db)))
 Handler.register_handler('3', 'Добавить продажу', 'add_menu',
-                         lambda: Add().sell())
+                         lambda: Add().execute(SellBuilder.build(sells_db)))
 Handler.register_handler('4', 'Назад', 'add_menu',
                          lambda: UserInteraction.start_menu('main_menu'))
 
 Handler.register_handler('1', 'Удалить работника', 'delete_menu',
-                         lambda: Delete().employee())
+                         lambda: Delete().execute(EmployeeBuilder.build(employees_db)))
 Handler.register_handler('2', 'Удалить книгу', 'delete_menu',
-                         lambda: Delete().book())
+                         lambda: Delete().execute(BookBuilder.build(books_db)))
 Handler.register_handler('3', 'Удалить продажу', 'delete_menu',
-                         lambda: Delete().sell())
+                         lambda: Delete().execute(SellBuilder.build(sells_db)))
 Handler.register_handler('4', 'Назад', 'delete_menu',
                          lambda: UserInteraction.start_menu('main_menu'))
 
@@ -109,39 +114,39 @@ Handler.register_handler('4', 'Назад', 'view_menu',
 
 
 Handler.register_handler('1', 'Данные работника о всех работниках', 'employee_info_menu',
-                         lambda: ExecuteCommand('employees').show_obj())
+                         lambda: ExecuteCommand(employees_db).show_obj())
 Handler.register_handler('2', 'Данные работника по ID', 'employee_info_menu',
-                         lambda: ExecuteCommand('employees', id=Modify.create_int('Введите ID: ')).show_obj())
+                         lambda: ExecuteCommand(employees_db, id=Modify.create_int('Введите ID: ')).show_obj())
 Handler.register_handler('3', 'Данные работника по номеру телефона', 'employee_info_menu',
-                         lambda: ExecuteCommand('employees', phone=Modify.create_int('Введите номер: ')).show_obj())
+                         lambda: ExecuteCommand(employees_db, phone=Modify.create_int('Введите номер: ')).show_obj())
 Handler.register_handler('4', 'Назад', 'employee_info_menu',
                          lambda: UserInteraction.start_menu('view_menu'))
 
 Handler.register_handler('1', 'Данные о всех книгах', 'book_info_menu',
-                         lambda: ExecuteCommand('books').show_obj())
+                         lambda: ExecuteCommand(books_db).show_obj())
 Handler.register_handler('2', 'Данные о книге по ID', 'book_info_menu',
-                         lambda: ExecuteCommand('books', id=Modify.create_int('Введите ID: ')).show_obj())
+                         lambda: ExecuteCommand(books_db, id=Modify.create_int('Введите ID: ')).show_obj())
 Handler.register_handler('3', 'Назад', 'book_info_menu',
                          lambda: UserInteraction.start_menu('view_menu'))
 
 Handler.register_handler('1', 'Данные о всех продажах', 'sells_info_menu',
-                         lambda: ExecuteCommand('sells').show_obj())
+                         lambda: ExecuteCommand(sells_db).show_obj())
 Handler.register_handler('2', 'Данные о всех продажах за конкретную дату', 'sells_info_menu',
-                         lambda: ExecuteCommand('sells', date=str(Modify.create_date())).show_obj())
+                         lambda: ExecuteCommand(sells_db, date=str(Modify.create_date())).show_obj())
 Handler.register_handler('3', 'Все продажи за определенный промежуток времени', 'sells_info_menu',
-                         lambda: ExecuteCommand('sells').obj_in_period())
+                         lambda: ExecuteCommand(sells_db).obj_in_period())
 Handler.register_handler('4', 'Все продажи конкретного сотрудника', 'sells_info_menu',
-                         lambda: ExecuteCommand('sells', employee_id=EmployeeBuilder.build().get_id()).show_obj())
+                         lambda: ExecuteCommand(sells_db, employee_id=EmployeeBuilder.build(employees_db).get_id()).show_obj())
 Handler.register_handler('5', 'Самая продаваемая книга за определенный промежуток времени', 'sells_info_menu',
-                         lambda: ExecuteCommand('sells').best('books', 'name'))
+                         lambda: ExecuteCommand(sells_db).best('books', 'name'))
 Handler.register_handler('6', 'Самый продуктивный торговца за определенный промежуток времени', 'sells_info_menu',
-                         lambda: ExecuteCommand('sells').best('employees', 'name'))
+                         lambda: ExecuteCommand(sells_db).best('employees', 'name'))
 Handler.register_handler('7', 'Суммарная прибыль за определенный промежуток времени', 'sells_info_menu',
-                         lambda: ExecuteCommand('sells').sum_profit())
+                         lambda: ExecuteCommand(sells_db).sum_profit())
 Handler.register_handler('8', 'Самый продаваемый автор за определенный промежуток времени', 'sells_info_menu',
-                         lambda: ExecuteCommand('sells').best('books', 'author'))
+                         lambda: ExecuteCommand(sells_db).best('books', 'author'))
 Handler.register_handler('9', 'Самый продаваемый жанр за определенный промежуток времени', 'sells_info_menu',
-                         lambda: ExecuteCommand('sells').best('books', 'genre'))
+                         lambda: ExecuteCommand(sells_db).best('books', 'genre'))
 
 if __name__ == "__main__":
     UserInteraction.start_menu('main_menu')
